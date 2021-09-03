@@ -1,0 +1,16 @@
+ports:
+  - port: 4222
+    onOpen: ignore
+tasks:
+  - init: |
+      sudo DEBIAN_FRONTEND=noninteractive apt-get update
+      sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libsasl2-dev libssl-dev libxxhash-dev libstdc++-10-dev
+      git clone https://github.com/rui314/mold.git /workspace/mold
+      pushd /workspace/mold
+      git checkout v0.9.4
+      make -j$(nproc)
+      popd
+      make -j$(nproc) -k build-dev test-all check-all build-rustdoc
+vscode:
+  extensions:
+    - matklad.rust-analyzer
